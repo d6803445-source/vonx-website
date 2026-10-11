@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vonx Launcher — Download</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Background screenshots -->
+  <div class="bg-gallery">
+    <div class="bg-slide s1"></div>
+    <div class="bg-slide s2"></div>
+    <div class="bg-slide s3"></div>
+    <div class="bg-overlay"></div>
+  </div>
+
+  <nav class="nav">
+    <div class="logo">VONX <span>LAUNCHER</span></div>
+    <div class="nav-right">
+      <a href="#features">Возможности</a>
+      <a href="#download">Скачать</a>
+      <button id="btnLogin" class="btn-nav" onclick="loginGoogle()">Войти через Google</button>
+      <div id="userMenu" class="user-menu hidden">
+        <img id="navAvatar" src="" alt="" class="nav-avatar" />
+        <span id="navNick"></span>
+        <div class="user-dropdown">
+          <button onclick="openProfile()">Профиль</button>
+          <button id="btnAdmin" class="hidden" onclick="openAdmin()">Админ-панель</button>
+          <button onclick="logout()">Выйти</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <h1>Vonx Launcher</h1>
+      <p class="subtitle">Современный лаунчер Minecraft. Темы, Microsoft-аккаунты, быстрый запуск.</p>
+      <div class="hero-actions" id="download">
+        <a id="downloadBtn" class="btn-download" href="#" onclick="downloadLauncher(event)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Download for Windows
+        </a>
+        <p class="version-label" id="latestVersion">Последняя версия загружается...</p>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="feature">
+        <div class="f-icon">🎨</div>
+        <h3>Темы</h3>
+        <p>NL (Neverlose) и зелёная Minecraft-тема</p>
+      </div>
+      <div class="feature">
+        <div class="f-icon">👤</div>
+        <h3>Аккаунты</h3>
+        <p>Microsoft и локальные аккаунты</p>
+      </div>
+      <div class="feature">
+        <div class="f-icon">📦</div>
+        <h3>Все версии</h3>
+        <p>Release, Snapshot, установка в один клик</p>
+      </div>
+      <div class="feature">
+        <div class="f-icon">⚡</div>
+        <h3>Быстрый запуск</h3>
+        <p>Скачивание с прогрессом и кнопка Играть</p>
+      </div>
+    </section>
+
+    <section class="screenshots">
+      <h2>Скриншоты</h2>
+      <div class="shots">
+        <div class="shot mock-home"><span>Главная</span></div>
+        <div class="shot mock-versions"><span>Версии</span></div>
+        <div class="shot mock-settings"><span>Настройки / Темы</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Vonx Launcher</p>
+  </footer>
+
+  <!-- Profile Modal -->
+  <div id="profileModal" class="modal hidden">
+    <div class="modal-card">
+      <h2>Профиль</h2>
+      <div class="profile-avatar-wrap">
+        <img id="profileAvatar" src="" alt="" />
+        <label class="avatar-upload">
+          Сменить аватар
+          <input type="file" accept="image/*" onchange="uploadAvatar(event)" hidden />
+        </label>
+      </div>
+      <label>Ник</label>
+      <input id="profileNick" type="text" maxlength="24" placeholder="Ваш ник" />
+      <label>Роль</label>
+      <input id="profileRole" type="text" readonly />
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeProfile()">Отмена</button>
+        <button class="btn-primary" onclick="saveProfile()">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div id="adminModal" class="modal hidden">
+    <div class="modal-card modal-wide">
+      <h2>Админ-панель</h2>
+      <div class="admin-tabs">
+        <button class="tab active" onclick="showAdminTab('versions')">Версии лаунчера</button>
+        <button class="tab" onclick="showAdminTab('users')">Пользователи</button>
+      </div>
+
+      <div id="tabVersions" class="tab-content">
+        <h3>Добавить версию</h3>
+        <div class="form-row">
+          <input id="newVerName" type="text" placeholder="Название (например 1.0.1)" />
+          <input id="newVerUrl" type="text" placeholder="Ссылка на скачивание (.exe / .zip)" />
+          <input id="newVerNotes" type="text" placeholder="Описание (необязательно)" />
+          <button class="btn-primary" onclick="addVersion()">Добавить</button>
+        </div>
+        <h3>Список версий</h3>
+        <div id="versionsList" class="list"></div>
+      </div>
+
+      <div id="tabUsers" class="tab-content hidden">
+        <h3>Зарегистрированные пользователи</h3>
+        <div id="usersList" class="list"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeAdmin()">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
